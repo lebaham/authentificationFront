@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { TokenStorageService } from '../auth/token-storage.service';
 import { UserService } from '../services/user.service';
-import { AuthLoginInfo } from '../auth/login-info';
+import { User } from '../model/user';
 
 @Component({
   selector: 'app-home',
@@ -11,7 +11,10 @@ import { AuthLoginInfo } from '../auth/login-info';
 })
 export class HomeComponent implements OnInit {
   info: any;
-  users: AuthLoginInfo[] = [];
+  users: User[] = [];
+  listUsers: User[] = [];
+  index: number;
+  selected = false;
 
   constructor(private token: TokenStorageService, private userService: UserService) { }
 
@@ -32,5 +35,41 @@ export class HomeComponent implements OnInit {
       });
     }
 
+  }
+
+  onChange(user: User, isChecked: boolean) {
+    if (isChecked) {
+      this.listUsers.push(user);
+    } else {
+      this.index = this.listUsers.findIndex(x => x === user);
+      this.listUsers.splice(this.index, 1);
+    }
+  }
+
+  selectAll(isChecked: boolean) {
+    this.listUsers.pop();
+    if (isChecked) {
+      this.users.forEach(element => {
+        this.selected = true;
+        if (!this.listUsers.includes(element)) {
+          this.listUsers.push(element);
+        }
+      });
+    } else {
+      this.users.forEach(element => {
+        this.selected = false;
+        this.listUsers.pop();
+      });
+    }
+  }
+
+  deleteUser() {
+    if (this.listUsers.length > 0) {
+      this.listUsers.forEach(user => {
+        this.userService.deleteUser(user.id).subscribe( data => {
+          this.users = this.users.filter(u => u !== user);
+        });
+      });
+    }
   }
 }

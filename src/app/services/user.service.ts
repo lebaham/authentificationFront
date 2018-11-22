@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthLoginInfo } from '../auth/login-info';
+import { User } from '../model/user';
 
 
 const httpOptions = {
@@ -17,6 +17,8 @@ export class UserService {
   private pmUrl = 'http://localhost:8080/api/test/pm';
   private adminUrl = 'http://localhost:8080/api/test/admin';
   private allUsersUrl = 'http://localhost:8080/api/user/users';
+  private deleteUserUrl = 'http://localhost:8080/api/user/delete';
+  private updateUserUrl = 'http://localhost:8080/api/user/update';
 
   constructor(private http: HttpClient) { }
 
@@ -32,8 +34,16 @@ export class UserService {
     return this.http.get(this.adminUrl, { responseType: 'text' });
   }
 
-  allUsers(): Observable<AuthLoginInfo[]> {
-    return  this.http.get<AuthLoginInfo[]>(this.allUsersUrl, httpOptions);
+  allUsers(): Observable<User[]> {
+    return  this.http.get<User[]>(this.allUsersUrl, httpOptions);
+  }
+
+  deleteUser(id: number) {
+    return this.http.delete(this.deleteUserUrl + '/' + id);
+  }
+
+  updateUser(user: User) {
+    return this.http.put(this.updateUserUrl + '/' + user.id, user);
   }
 
 }

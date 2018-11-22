@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { SignUpInfo } from '../auth/signup-info';
+import { Router, CanDeactivate } from '@angular/router';
+import { CanDeactivateGuard } from '../can-deactivate.guard';
+import { DialogService } from '../dialog/dialog.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-register',
@@ -15,7 +19,7 @@ export class RegisterComponent implements OnInit {
   isSignUpFailed = false;
   errorMessage = '';
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private route: Router, private dialogService: DialogService) { }
 
   ngOnInit() { }
 
@@ -37,4 +41,14 @@ export class RegisterComponent implements OnInit {
       }
     );
   }
+
+  canDeactivate(): Observable<boolean> | boolean {
+
+    if (this.form.dirty) {
+      console.log(this.form.dirty);
+        return this.dialogService.confirm('le formulaire a été modifié');
+    }
+    return true;
+}
+
 }
