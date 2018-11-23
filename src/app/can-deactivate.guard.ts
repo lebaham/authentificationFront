@@ -1,22 +1,23 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, CanDeactivate } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRouteSnapshot, RouterStateSnapshot, CanDeactivate, } from '@angular/router';
+import { ComponentCanDeactivate } from './dialog/componentCanDeactivate';
 
-export interface CanComponentDeactivate {
-  canDeactivate: () => Observable<boolean> | Promise<boolean> | boolean;
-}
 
 @Injectable({
   providedIn: 'root'
 })
-export class CanDeactivateGuard implements CanDeactivate<CanComponentDeactivate> {
+export class CanDeactivateGuard implements CanDeactivate<ComponentCanDeactivate> {
 
-  canDeactivate(component: CanComponentDeactivate,
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot) {
+  canDeactivate(component: ComponentCanDeactivate): boolean {
 
-    const url: string = state.url;
-    return component.canDeactivate ? component.canDeactivate() : true;
+    if (!component.canDeactivate()) {
+      if (confirm('You have unsaved changes! If you leave, your changes will be lost.')) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    return true;
   }
 
 }

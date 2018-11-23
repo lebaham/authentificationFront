@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../auth/token-storage.service';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,7 @@ export class HomeComponent implements OnInit {
   index: number;
   selected = false;
 
-  constructor(private token: TokenStorageService, private userService: UserService) { }
+  constructor(private token: TokenStorageService, private userService: UserService, private router: Router) { }
 
   ngOnInit() {
     this.loadAllUsers();
@@ -71,5 +72,9 @@ export class HomeComponent implements OnInit {
         });
       });
     }
+  }
+
+  editUser(user: User): void {
+    this.router.navigate(['edit-user']);
   }
 }

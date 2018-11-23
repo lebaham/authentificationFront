@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 
 import { AuthService } from '../auth/auth.service';
 import { SignUpInfo } from '../auth/signup-info';
 import { Router, CanDeactivate } from '@angular/router';
-import { CanDeactivateGuard } from '../can-deactivate.guard';
 import { DialogService } from '../dialog/dialog.service';
 import { Observable } from 'rxjs';
+import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register',
@@ -18,17 +18,33 @@ export class RegisterComponent implements OnInit {
   isSignedUp = false;
   isSignUpFailed = false;
   errorMessage = '';
+  @ViewChild('form')
+  userForm: FormGroup;
 
-  constructor(private authService: AuthService, private route: Router, private dialogService: DialogService) { }
+  constructor(private authService: AuthService, private route: Router, private dialogService: DialogService,
+    private formBuilder: FormBuilder) { }
 
-  ngOnInit() { }
+  ngOnInit() {
+    this.initForm();
+  }
 
-  onSubmit() {
+  initForm() {
+    this.userForm = this.formBuilder.group({
+      name: ['', Validators.required],
+      username: ['', Validators.required],
+      email: ['', Validators.email],
+      password: ['', Validators.required],
+    });
+  }
+
+  onSubmitForm() {
+    const formValue = this.userForm.value;
     this.signupInfo = new SignUpInfo(
-      this.form.name,
-      this.form.username,
-      this.form.email,
-      this.form.password);
+      formValue['name'],
+      formValue['username'],
+      formValue['email'],
+      formValue['password']
+    );
 
     this.authService.signUp(this.signupInfo).subscribe(
       data => {
@@ -44,11 +60,10 @@ export class RegisterComponent implements OnInit {
 
   canDeactivate(): Observable<boolean> | boolean {
 
-    if (this.form.dirty) {
-      console.log(this.form.dirty);
-        return this.dialogService.confirm('le formulaire a été modifié');
+    if (this.userForm.dirty) {
+      return this.dialogService.confirm('You have unsaved changes! If you leave, your changes will be lost.');
     }
     return true;
-}
+  }
 
 }
