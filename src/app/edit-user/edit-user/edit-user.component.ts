@@ -1,17 +1,46 @@
-import { Component, OnInit } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
+import { UserService } from 'src/app/services/user.service';
+import { User } from 'src/app/model/user';
+import { ActivatedRoute, Router } from '@angular/router';
+import { OnInit, Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css']
 })
-export class EditUserComponent implements OnInit {
+export class EditUserComponent implements OnInit, OnDestroy{
+  user: User;
+  message: string;
+  sub: Subscription;
+  submitted = false;
 
   constructor(private route: ActivatedRoute,
-    private router: Router) { }
+  private userService: UserService, private router: Router) { }
 
   ngOnInit() {
+      this.sub = this.route.params.subscribe(params => {
+        const id = params['id'];
+        if(id){
+          this.userService.getUser(id).subscribe((user: User) =>{
+            if(user){
+              this.user = user;
+            }
+          });
+        }
+      });
+  }
+
+  update(): void {
+    this.userService.updateUser(this.user).subscribe(() => {
+      this.message = "Customer Updated Successfully!"
+      this.router.navigate(['home']);
+    }
+    );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
 }

@@ -19,6 +19,7 @@ export class UserService {
   private allUsersUrl = 'http://localhost:8080/api/user/users';
   private deleteUserUrl = 'http://localhost:8080/api/user/delete';
   private updateUserUrl = 'http://localhost:8080/api/user/update';
+  private getUserUrl =  'http://localhost:8080/api/user';
 
   constructor(private http: HttpClient) { }
 
@@ -41,9 +42,13 @@ export class UserService {
   deleteUser(id: number) {
     return this.http.delete(this.deleteUserUrl + '/' + id);
   }
+   
+  getUser(id: number): Observable<User>{
+    return this.http.get<User>(this.getUserUrl + '/' + id);
+  }
 
-  updateUser(user: User) {
-    return this.http.put(this.updateUserUrl + '/' + user.id, user);
+  updateUser(user: User): Observable<User> {
+    return this.http.put<User>(this.updateUserUrl + '/' + user.id, user);
   }
 
 }

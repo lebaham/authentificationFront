@@ -4,6 +4,7 @@ import { TokenStorageService } from '../auth/token-storage.service';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
 import { Router } from '@angular/router';
+import { PagerServiceService } from '../pagination/pager-service.service';
 
 @Component({
   selector: 'app-home',
@@ -16,8 +17,14 @@ export class HomeComponent implements OnInit {
   listUsers: User[] = [];
   index: number;
   selected = false;
+   // pager object
+   pager: any = {};
+ 
+   // paged items
+   pagedItems: any[];
 
-  constructor(private token: TokenStorageService, private userService: UserService, private router: Router) { }
+  constructor(private token: TokenStorageService, private userService: UserService,
+     private router: Router, private pagerService: PagerServiceService) { }
 
   ngOnInit() {
     this.loadAllUsers();
@@ -32,6 +39,8 @@ export class HomeComponent implements OnInit {
       this.userService.allUsers().subscribe(data => {
         data.forEach(user => {
           this.users.push(user);
+          // initialize to page 1
+          this.setPage(1);
         });
       });
     }
@@ -74,7 +83,12 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  editUser(user: User): void {
-    this.router.navigate(['edit-user']);
-  }
+  setPage(page: number) {
+    // get pager object from service
+    this.pager = this.pagerService.getPager(this.users.length, page);
+
+    // get current page of items
+    this.pagedItems = this.users.slice(this.pager.startIndex, this.pager.endIndex + 1);
+}
+
 }
