@@ -16,6 +16,8 @@ import { AuthGuard } from './auth.guard';
 import { CanDeactivateGuard } from './can-deactivate.guard';
 import { RegisterComponent } from './register/register.component';
 import { EditUserComponent } from './edit-user/edit-user/edit-user.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { UserModule } from './users/user.module';
 
 @NgModule({
   declarations: [
@@ -26,14 +28,16 @@ import { EditUserComponent } from './edit-user/edit-user/edit-user.component';
     HomeComponent,
     AdminComponent,
     PmComponent,
-    EditUserComponent
+    EditUserComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    UserModule
   ],
   providers: [httpInterceptorProviders, AuthGuard, CanDeactivateGuard],
   bootstrap: [AppComponent]

@@ -9,32 +9,26 @@ import { Subscription } from 'rxjs';
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css']
 })
-export class EditUserComponent implements OnInit, OnDestroy{
+export class EditUserComponent implements OnInit, OnDestroy {
   user: User;
   message: string;
   sub: Subscription;
   submitted = false;
 
   constructor(private route: ActivatedRoute,
-  private userService: UserService, private router: Router) { }
+    private userService: UserService, private router: Router) { }
 
   ngOnInit() {
-      this.sub = this.route.params.subscribe(params => {
-        const id = params['id'];
-        if(id){
-          this.userService.getUser(id).subscribe((user: User) =>{
-            if(user){
-              this.user = user;
-            }
-          });
-        }
-      });
+    this.route.data
+    .subscribe((data: { user: User }) => {
+      this.user = data.user;
+    });
   }
 
   update(): void {
     this.userService.updateUser(this.user).subscribe(() => {
-      this.message = "Customer Updated Successfully!"
-      this.router.navigate(['home']);
+      this.message = 'Customer Updated Successfully!';
+      this.router.navigate(['../', { id: this.user.id}], { relativeTo: this.route });
     }
     );
   }

@@ -19,7 +19,8 @@ export class UserService {
   private allUsersUrl = 'http://localhost:8080/api/user/users';
   private deleteUserUrl = 'http://localhost:8080/api/user/delete';
   private updateUserUrl = 'http://localhost:8080/api/user/update';
-  private getUserUrl =  'http://localhost:8080/api/user';
+  private getUserUrl = 'http://localhost:8080/api/user';
+  private paginationUrl = 'http://localhost:8080/api/user';
 
   constructor(private http: HttpClient) { }
 
@@ -36,19 +37,23 @@ export class UserService {
   }
 
   allUsers(): Observable<User[]> {
-    return  this.http.get<User[]>(this.allUsersUrl, httpOptions);
+    return this.http.get<User[]>(this.allUsersUrl, httpOptions);
   }
 
   deleteUser(id: number) {
     return this.http.delete(this.deleteUserUrl + '/' + id);
   }
-   
-  getUser(id: number): Observable<User>{
+
+  getUser(id: number): Observable<User> {
     return this.http.get<User>(this.getUserUrl + '/' + id);
   }
 
   updateUser(user: User): Observable<User> {
     return this.http.put<User>(this.updateUserUrl + '/' + user.id, user);
+  }
+
+  paginationUsers(page: number): Observable<User[]> {
+    return this.http.get<User[]>(this.paginationUrl + '/list?page=' + page);
   }
 
 }

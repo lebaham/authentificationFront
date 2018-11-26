@@ -2,3 +2,11 @@
     margin-left: 7%;
     margin-right: 15%;
 }
+
+.users tr.selected {
+    background-color: #CFD8DC;
+    color: blue;
+  }
+  .users tr:hover {
+    background-color: burlywood;
+  }

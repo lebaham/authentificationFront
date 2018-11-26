@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { CanActivate, Router, ActivatedRouteSnapshot, RouterStateSnapshot, CanActivateChild } from '@angular/router';
 import { TokenStorageService } from './auth/token-storage.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+export class AuthGuard implements CanActivate, CanActivateChild  {
     constructor(private tokenService: TokenStorageService, private myRoute: Router) {
 
     }
@@ -24,4 +24,10 @@ export class AuthGuard implements CanActivate {
             return false;
         }
     }
+
+    canActivateChild(
+        route: ActivatedRouteSnapshot,
+        state: RouterStateSnapshot): Observable<boolean> | Promise<boolean> | boolean {
+        return this.canActivate(route, state);
+      }
 }

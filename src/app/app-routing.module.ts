@@ -10,9 +10,11 @@ import { AuthGuard } from './auth.guard';
 import { RegisterComponent } from './register/register.component';
 import { CanDeactivateGuard } from './can-deactivate.guard';
 import { EditUserComponent } from './edit-user/edit-user/edit-user.component';
+import { PageNotFoundComponent } from './page-not-found/page-not-found.component';
+import { UserDetailResolverService } from './user-resolver/user-detail-resolver.service';
 
 const routes: Routes = [
-    {
+       {
         path: '',
         redirectTo: 'auth/login',
         pathMatch: 'full',
@@ -49,9 +51,13 @@ const routes: Routes = [
     },
     {
         path: 'edit-user/:id',
+        component: EditUserComponent,
         canActivate: [AuthGuard],
-        component: EditUserComponent
-    }
+        resolve: {
+            user: UserDetailResolverService
+          }
+    },
+    { path: '**', component: PageNotFoundComponent }
 ];
 
 @NgModule({

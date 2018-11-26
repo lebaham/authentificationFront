@@ -13,8 +13,8 @@
             <th>Edit <button class="btn btn-danger btn-xs" data-placement="top" data-toggle="tooltip" title="Delete" (click)="deleteUser()"
               data-title="Delete" data-toggle="modal" data-target="#delete"><span class="glyphicon glyphicon-trash"></span></button></th>
           </thead>
-          <tbody>
-            <tr *ngFor="let user of users">
+          <tbody class="users">
+            <tr *ngFor="let user of pagedItems" [class.selected]="user.id == selectedId">
               <td><input type="checkbox" class="checkthis" (change)="onChange(user, $event.target.checked)" [(checked)]="selected"/></td>
               <td>{{user.name}}</td>
               <td>{{user.username}}</td>
@@ -26,20 +26,20 @@
             </tr>
              <!-- pager -->
              <ul *ngIf="pager.pages && pager.pages.length" class="pagination">
-              <li [ngClass]="{disabled:pager.currentPage === 1}">
-                  <a (click)="setPage(1)">First</a>
+              <li [ngClass]="{disabled:pager.currentPage === 1}" class="nav-item">
+                  <a (click)="setPage(1)" class="nav-link">First</a>
               </li>
-              <li [ngClass]="{disabled:pager.currentPage === 1}">
-                  <a (click)="setPage(pager.currentPage - 1)">Previous</a>
+              <li [ngClass]="{disabled:pager.currentPage === 1}" class="nav-item">
+                  <a (click)="setPage(pager.currentPage - 1)" class="nav-link">Previous</a>
               </li>
-              <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}">
-                  <a (click)="setPage(page)">{{page}}</a>
+              <li *ngFor="let page of pager.pages" [ngClass]="{active:pager.currentPage === page}" class="nav-item">
+                  <a (click)="setPage(page)" class="nav-link">{{page}}</a>
+              </li>
+              <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}" class="nav-item">
+                  <a (click)="setPage(pager.currentPage + 1)" class="nav-link">Next</a>
               </li>
               <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
-                  <a (click)="setPage(pager.currentPage + 1)">Next</a>
-              </li>
-              <li [ngClass]="{disabled:pager.currentPage === pager.totalPages}">
-                  <a (click)="setPage(pager.totalPages)">Last</a>
+                  <a (click)="setPage(pager.totalPages)" class="nav-link" class="nav-item">Last</a>
               </li>
           </ul>
           </tbody>

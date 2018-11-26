@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { TokenStorageService } from '../auth/token-storage.service';
 import { UserService } from '../services/user.service';
 import { User } from '../model/user';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PagerServiceService } from '../pagination/pager-service.service';
 
 @Component({
@@ -17,17 +17,22 @@ export class HomeComponent implements OnInit {
   listUsers: User[] = [];
   index: number;
   selected = false;
-   // pager object
-   pager: any = {};
- 
+  // pager object
+  pager: any = {};
+  page = 0;
+  firstPage = 1;
+  selectedId: number;
    // paged items
-   pagedItems: any[];
+   pagedItems: User[];
 
   constructor(private token: TokenStorageService, private userService: UserService,
-     private router: Router, private pagerService: PagerServiceService) { }
+    private router: Router, private pagerService: PagerServiceService, private route: ActivatedRoute) { }
 
   ngOnInit() {
-    this.loadAllUsers();
+    this.route.params.subscribe(params => {
+      this.selectedId = params['id'];
+      this.loadAllUsers();
+    });
   }
 
   logout() {
@@ -52,7 +57,7 @@ export class HomeComponent implements OnInit {
       this.listUsers.push(user);
     } else {
       this.index = this.listUsers.findIndex(x => x === user);
-      this.listUsers.splice(this.index, 1);
+      this.listUsers.splice(this.index, this.firstPage);
     }
   }
 
@@ -76,7 +81,7 @@ export class HomeComponent implements OnInit {
   deleteUser() {
     if (this.listUsers.length > 0) {
       this.listUsers.forEach(user => {
-        this.userService.deleteUser(user.id).subscribe( data => {
+        this.userService.deleteUser(user.id).subscribe(data => {
           this.users = this.users.filter(u => u !== user);
         });
       });
@@ -89,6 +94,6 @@ export class HomeComponent implements OnInit {
 
     // get current page of items
     this.pagedItems = this.users.slice(this.pager.startIndex, this.pager.endIndex + 1);
-}
+  }
 
 }
