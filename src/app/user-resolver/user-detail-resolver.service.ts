@@ -4,6 +4,7 @@ import { User } from '../model/user';
 import { UserService } from '../services/user.service';
 import { Observable, of, EMPTY } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -26,4 +27,5 @@ export class UserDetailResolverService implements Resolve<User> {
       })
     );
   }
+
 }

@@ -91,7 +91,6 @@ export class HomeComponent implements OnInit {
   setPage(page: number) {
     // get pager object from service
     this.pager = this.pagerService.getPager(this.users.length, page);
-
     // get current page of items
     this.pagedItems = this.users.slice(this.pager.startIndex, this.pager.endIndex + 1);
   }

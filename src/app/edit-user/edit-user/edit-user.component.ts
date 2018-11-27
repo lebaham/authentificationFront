@@ -9,10 +9,9 @@ import { Subscription } from 'rxjs';
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.css']
 })
-export class EditUserComponent implements OnInit, OnDestroy {
+export class EditUserComponent implements OnInit {
   user: User;
   message: string;
-  sub: Subscription;
   submitted = false;
 
   constructor(private route: ActivatedRoute,
@@ -28,13 +27,9 @@ export class EditUserComponent implements OnInit, OnDestroy {
   update(): void {
     this.userService.updateUser(this.user).subscribe(() => {
       this.message = 'Customer Updated Successfully!';
-      this.router.navigate(['../', { id: this.user.id}], { relativeTo: this.route });
+      this.router.navigate(['home', { id: this.user.id}]);
     }
     );
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }
